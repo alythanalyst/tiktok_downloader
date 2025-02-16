@@ -1,6 +1,8 @@
 [build]
-  functions = "functions/"  # Where your Netlify Functions are
-  publish = "templates/"    # Publish the templates directory (HTML)
+  publish = "templates/"
+  functions = "functions/"
 
-[functions]
-  directory = "functions/"   # Same as above
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
