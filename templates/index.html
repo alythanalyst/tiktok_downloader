@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+  <head> </head>
+  <body>
+    <div class="container">
+      <h1>Testing High Quality TikTok Video Downloader</h1>
+      <input type="text" id="videoUrl" placeholder="Enter TikTok Video URL" />
+      <button onclick="downloadHdVideo()">Download HD Video</button>
+      <div id="loading">Loading...</div>
+      <p id="message"></p>
+    </div>
+
+    <script>
+      function downloadHdVideo() {
+          const videoUrl = document.getElementById("videoUrl").value;
+          const message = document.getElementById("message");
+          const loading = document.getElementById("loading");
+
+          message.textContent = "";
+          loading.style.display = "block";
+
+          fetch("/.netlify/functions/tiktok", {  // Call the Netlify Function
+              method: "POST",
+              headers: {
+                  "Content-Type": "application/json"  // Important: Send JSON data
+              },
+              body: JSON.stringify({ videoUrl: videoUrl }) // Send data as JSON
+          })
+          .then(response => response.json()) // Parse JSON response
+          .then(data => {
+              loading.style.display = "none";
+              if (data && data.body) { // Check if data and body exist
+                  if (data.body.startsWith("Error:")) {
+                      message.textContent = data.body;
+                  } else if (data.body.startsWith("https://")) {
+                      const link = document.createElement("a");
+                      link.href = data.body;
+                      link.download = "tiktok_video.mp4";
+                      link.style.display = "none';
+                      document.body.appendChild(link);
+                      link.click();
+                      document.body.removeChild(link);
+                      message.textContent = "Download started...";
+                  } else {
+                      message.textContent = "An unexpected error occurred.";
+                  }
+              } else {
+                  message.textContent = "An unexpected error occurred.";
+              }
+
+          })
+          .catch(error => {
+              loading.style.display = "none";
+              message.textContent = "An error occurred.";
+              console.error("Error:", error);
+          });
+      }
+    </script>
+  </body>
+</html>

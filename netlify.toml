@@ -1,0 +1,6 @@
+[build]
+  functions = "functions/"  # Where your Netlify Functions are
+  publish = "templates/"    # Publish the templates directory (HTML)
+
+[functions]
+  directory = "functions/"   # Same as above
